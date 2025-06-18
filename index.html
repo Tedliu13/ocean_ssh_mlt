@@ -188,6 +188,18 @@
       });
     }
 
+    function attachClickEvents(chart) {
+      chart.canvas.onclick = function(evt) {
+        const points = chart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, true);
+        if (points.length > 0) {
+          const idx = points[0].index;
+          updateFrame(idx);
+          slider.value = idx;
+        }
+      };
+    }
+
+    // 加到初始化圖表後
     function initializeCharts() {
       const varName = variable.value;
       if (!(varName in allData)) return;
@@ -207,6 +219,11 @@
       globalChart.update();
       northChart.update();
       southChart.update();
+
+      // 綁定點擊事件
+      attachClickEvents(globalChart);
+      attachClickEvents(northChart);
+      attachClickEvents(southChart);
     }
 
     function updateFrame(index) {
